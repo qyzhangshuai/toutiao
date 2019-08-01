@@ -3,10 +3,14 @@ import App from './App.vue'
 // 引入element
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-Vue.use(ElementUI)
+import router from '@/router'
 
+// 引入公共样式
+import '@/style/reset.min.css'
+Vue.use(ElementUI)
 Vue.config.productionTip = false
 
 new Vue({
+  router,
   render: h => h(App)
 }).$mount('#app')
