@@ -40,10 +40,11 @@
 </template>
 
 <script>
+import store from '@/store'
 export default {
   data () {
     var validateMobile = (rule, value, callback) => {
-      const reg = /^1[3-9]\d{9}/g
+      const reg = /^1[3-9]\d{9}/
       if (!reg.test(value)) {
         callback(new Error('手机格式输入不正确'))
       } else {
@@ -71,20 +72,32 @@ export default {
   },
   methods: {
     submit (formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate(async valid => {
         if (valid) {
           // 发送请求
-          this.$http
-            .post(
-              'http://ttapi.research.itcast.cn/mp/v1_0/authorizations',
+          // this.$http
+          //   .post(
+          //     'http://ttapi.research.itcast.cn/mp/v1_0/authorizations',
+          //     this.loginForm
+          //   )
+          //   .then(result => {
+          //     store.setUser(result.data)
+          //     this.$router.push('/')
+          //   })
+          //   .catch(() => {
+          //     this.$message.error('输入的手机号或者验证码不正确')
+          //   })
+          // 使用async和await进行优化
+
+          try {
+            let { data } = await this.$http.post('http://ttapi.research.itcast.cn/mp/v1_0/authorizations',
               this.loginForm
             )
-            .then(result => {
-              this.$router.push('/')
-            })
-            .catch(() => {
-              this.$message.error('输入的手机号或者验证码不正确')
-            })
+            store.setUser(data)
+            this.$router.push('/')
+          } catch (e) {
+            this.$message.error('输入的手机号或者验证码不正确')
+          }
         }
       })
     }
